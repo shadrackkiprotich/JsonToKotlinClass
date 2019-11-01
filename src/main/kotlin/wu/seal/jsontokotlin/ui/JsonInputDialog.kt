@@ -20,6 +20,7 @@ import wu.seal.jsontokotlin.utils.executeCouldRollBackAction
 import java.awt.Dimension
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
+import java.awt.event.ActionEvent
 import java.net.URL
 import java.util.*
 import java.util.Timer
@@ -53,21 +54,26 @@ class JsonInputDialog(classsName: String, private val project: Project) : Messag
     }
 
     override fun createNorthPanel(): JComponent? {
-
-        return horizontalLinearLayout {
-            icon("/icons/icon_json_input_dialog.png")()
+        return jHorizontalLinearLayout {
+            add(icon("/icons/icon_json_input_dialog.png"))
             fixedSpace(5)
-            verticalLinearLayout {
-                label(myMessage, 12f).putAlignLeft()
-                horizontalLinearLayout {
-                    label("JSON Text: ", 14f)()
-                    label("Tips: you can use JSON string、http urls or local file just right click on text area", 12f)()
+            jVerticalLinearLayout {
+                setAlignLeft(true)
+                jLabel(myMessage, 12f)
+                setAlignLeft(false)
+                jHorizontalLinearLayout {
+                    jLabel("JSON Text: ", 14f)
+                    jLabel("Tips: you can use JSON string、http urls or local file just right click on text area", 12f)
                     fillSpace()
-                    button("JSON Format") {
-                        handleFormatJSONString()
-                    }()
-                }()
-            }()
+                    jButton("JSON Format") {
+                        addActionListener(object : AbstractAction() {
+                            override fun actionPerformed(p0: ActionEvent?) {
+                                handleFormatJSONString()
+                            }
+                        })
+                    }
+                }
+            }
         }
     }
 
@@ -103,16 +109,19 @@ class JsonInputDialog(classsName: String, private val project: Project) : Messag
     }
 
     private fun createAdvancedPanel(): JPanel {
-
-        return horizontalLinearLayout {
-            button("Advanced") {
-                AdvancedDialog(false).show()
-            }()
+        return jHorizontalLinearLayout {
+            jButton("Advanced") {
+                addActionListener(object : AbstractAction() {
+                    override fun actionPerformed(p0: ActionEvent?) {
+                        AdvancedDialog(false).show()
+                    }
+                })
+            }
             fillSpace()
-            label("Like this version? Please star here: ")()
-            link("https://github.com/wuseal/JsonToKotlinClass", "https://github.com/wuseal/JsonToKotlinClass", maxSize = JBDimension(210, 30)) {
+            jLabel("Like this version? Please star here: ")
+            jLink("https://github.com/wuseal/JsonToKotlinClass", "https://github.com/wuseal/JsonToKotlinClass",maxSize = JBDimension(210, 30)) {
                 sendActionInfo(prettyGson.toJson(ClickProjectURLAction()))
-            }()
+            }
         }
     }
 
@@ -147,8 +156,7 @@ class JsonInputDialog(classsName: String, private val project: Project) : Messag
     }
 
     override fun createTextFieldComponent(): JTextComponent {
-
-        return JTextField().apply {
+        return jTextField {
             maximumSize = JBDimension(10000, 35)
             document = NamingConventionDocument()
         }

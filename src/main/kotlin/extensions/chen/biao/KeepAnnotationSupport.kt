@@ -3,8 +3,8 @@ package extensions.chen.biao
 import extensions.Extension
 import wu.seal.jsontokotlin.classscodestruct.Annotation
 import wu.seal.jsontokotlin.classscodestruct.KotlinDataClass
-import wu.seal.jsontokotlin.ui.checkBox
-import wu.seal.jsontokotlin.ui.horizontalLinearLayout
+import wu.seal.jsontokotlin.ui.jCheckBox
+import wu.seal.jsontokotlin.ui.jHorizontalLinearLayout
 import javax.swing.JPanel
 
 /**
@@ -18,10 +18,12 @@ object KeepAnnotationSupport : Extension() {
     private const val configKey = "chen.biao.add_keep_annotation_enable"
 
     override fun createUI(): JPanel {
-        return horizontalLinearLayout {
-            checkBox("Add @Keep Annotation On Class ", getConfig(configKey).toBoolean()) { isSelectedAfterClick ->
-                setConfig(configKey, isSelectedAfterClick.toString())
-            }()
+        return jHorizontalLinearLayout {
+            jCheckBox("Add @Keep Annotation On Class ", getConfig(configKey).toBoolean()) {
+                addActionListener {
+                    setConfig(configKey, isSelected.toString())
+                }
+            }
             fillSpace()
         }
     }

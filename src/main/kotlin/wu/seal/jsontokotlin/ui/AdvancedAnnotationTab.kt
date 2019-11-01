@@ -15,34 +15,53 @@ import javax.swing.ScrollPaneConstants
  * JSON Converter Annotation Tab View
  */
 class AdvancedAnnotationTab(isDoubleBuffered: Boolean) : JPanel(BorderLayout(), isDoubleBuffered) {
+
     init {
-        val customizeAnnotationConfigPanel = verticalLinearLayout {
-            label("Annotation Import Class : ").putAlignLeft()
-            textAreaInput(ConfigManager.customAnnotationClassImportdeclarationString) {
+
+        val customizeAnnotationConfigPanel = jVerticalLinearLayout(addToParent = false) {
+
+            setAlignLeft(true)
+
+            jLabel("Annotation Import Class : ")
+
+            setAlignLeft(false)
+
+            jTextAreaInput(ConfigManager.customAnnotationClassImportdeclarationString) {
                 ConfigManager.customAnnotationClassImportdeclarationString = it.text
-            }()
-            label("Class Annotation Format: ").putAlignLeft()
-            textAreaInput(ConfigManager.customClassAnnotationFormatString) {
+            }
+
+            setAlignLeft(true)
+
+            jLabel("Class Annotation Format:")
+
+            setAlignLeft(false)
+
+            jTextAreaInput(ConfigManager.customClassAnnotationFormatString) {
                 ConfigManager.customClassAnnotationFormatString = it.text
-            }()
-            label("Property Annotation Format: ").putAlignLeft()
-            textAreaInput(ConfigManager.customPropertyAnnotationFormatString) {
+            }
+
+            setAlignLeft(true)
+
+            jLabel("Property Annotation Format:")
+
+            setAlignLeft(false)
+
+            jTextAreaInput(ConfigManager.customPropertyAnnotationFormatString) {
                 ConfigManager.customPropertyAnnotationFormatString = it.text
-            }()
-        }
-        val content = verticalLinearLayout {
-            AnnotationsSelectPanel(true) {
-                customizeAnnotationConfigPanel.isVisible = it
-            }()
-            customizeAnnotationConfigPanel()
+            }
+
         }
 
-        val scrollPanel = scrollPanel(JBDimension(500, 300)) {
-            content
+        jScrollPanel(JBDimension(500, 300)) {
+            jVerticalLinearLayout {
+                add(AnnotationsSelectPanel(true) {
+                    customizeAnnotationConfigPanel.isVisible = it
+                })
+                add(customizeAnnotationConfigPanel)
+            }
         }.apply {
             verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS //make sure when open customize annotation panel it's layout view will no change
         }
-        add(scrollPanel, BorderLayout.CENTER)
     }
 
     /**
@@ -50,55 +69,72 @@ class AdvancedAnnotationTab(isDoubleBuffered: Boolean) : JPanel(BorderLayout(), 
      */
     class AnnotationsSelectPanel(isDoubleBuffered: Boolean, callBack: (isCustomizeAnnotationSelected: Boolean) -> Unit) : JPanel(BorderLayout(), isDoubleBuffered) {
         init {
-            val content = gridLayout(5, 2) {
-                radioGroup {
-                    radioButton("None", ConfigManager.targetJsonConverterLib == TargetJsonConverter.None) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.None
-                    }().addToGroup()
 
-                    radioButton("None (Camel Case)", ConfigManager.targetJsonConverterLib == TargetJsonConverter.NoneWithCamelCase) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.NoneWithCamelCase
-                    }().addToGroup()
+            jGridLayout(5,2) {
+                jButtonGroup {
+                    jRadioButton("None", ConfigManager.targetJsonConverterLib == TargetJsonConverter.None) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.None
+                        }
+                    }
 
-                    radioButton("Gson", ConfigManager.targetJsonConverterLib == TargetJsonConverter.Gson) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.Gson
-                    }().addToGroup()
+                    jRadioButton("None (Camel Case)", ConfigManager.targetJsonConverterLib == TargetJsonConverter.NoneWithCamelCase) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.NoneWithCamelCase
+                        }
+                    }
 
-                    radioButton("Jackson", ConfigManager.targetJsonConverterLib == TargetJsonConverter.Jackson) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.Jackson
-                    }().addToGroup()
+                    jRadioButton("Gson", ConfigManager.targetJsonConverterLib == TargetJsonConverter.Gson) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.Gson
+                        }
+                    }
 
-                    radioButton("Fastjson", ConfigManager.targetJsonConverterLib == TargetJsonConverter.FastJson) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.FastJson
-                    }().addToGroup()
+                    jRadioButton("Jackson", ConfigManager.targetJsonConverterLib == TargetJsonConverter.Jackson) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.Jackson
+                        }
+                    }
 
-                    radioButton("MoShi(Reflect)", ConfigManager.targetJsonConverterLib == TargetJsonConverter.MoShi) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.MoShi
-                    }().addToGroup()
+                    jRadioButton("Fastjson",      ConfigManager.targetJsonConverterLib == TargetJsonConverter.FastJson) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.FastJson
+                        }
+                    }
 
-                    radioButton("MoShi (Codegen)", ConfigManager.targetJsonConverterLib == TargetJsonConverter.MoshiCodeGen) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.MoshiCodeGen
-                    }().addToGroup()
+                    jRadioButton("MoShi (Reflect)",   ConfigManager.targetJsonConverterLib == TargetJsonConverter.MoShi ) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.MoShi
+                        }
+                    }
 
-                    radioButton("LoganSquare", ConfigManager.targetJsonConverterLib == TargetJsonConverter.LoganSquare) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.LoganSquare
-                    }().addToGroup()
+                    jRadioButton("MoShi (Codegen)",  ConfigManager.targetJsonConverterLib == TargetJsonConverter.MoshiCodeGen) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.MoshiCodeGen
+                        }
+                    }
+                    jRadioButton("LoganSquare",  ConfigManager.targetJsonConverterLib == TargetJsonConverter.LoganSquare) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.LoganSquare
+                        }
+                    }
+                    jRadioButton("kotlinx.serialization", ConfigManager.targetJsonConverterLib == TargetJsonConverter.Serilizable) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.Serilizable
+                        }
+                    }
 
-                    radioButton("kotlinx.serialization", ConfigManager.targetJsonConverterLib == TargetJsonConverter.Serilizable) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.Serilizable
-                    }().addToGroup()
-
-                    val customizeAnnotationRadioButton = radioButton("Others by customize", ConfigManager.targetJsonConverterLib == TargetJsonConverter.Custom) {
-                        ConfigManager.targetJsonConverterLib = TargetJsonConverter.Custom
-                    }().addToGroup()
-
-                    onRadioButtonSelectListener = {
-                        callBack(it == customizeAnnotationRadioButton)
+                   jRadioButton("Others by customize", ConfigManager.targetJsonConverterLib == TargetJsonConverter.Custom) {
+                        addActionListener {
+                            ConfigManager.targetJsonConverterLib = TargetJsonConverter.Custom
+                        }
+                        addChangeListener {
+                            callBack(isSelected)
+                        }
                     }
                     callBack(ConfigManager.targetJsonConverterLib == TargetJsonConverter.Custom)
                 }
             }
-            add(content, BorderLayout.CENTER)
         }
     }
 }

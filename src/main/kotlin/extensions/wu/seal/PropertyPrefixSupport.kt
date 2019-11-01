@@ -2,10 +2,7 @@ package extensions.wu.seal
 
 import extensions.Extension
 import wu.seal.jsontokotlin.classscodestruct.KotlinDataClass
-import wu.seal.jsontokotlin.ui.NamingConventionDocument
-import wu.seal.jsontokotlin.ui.checkBox
-import wu.seal.jsontokotlin.ui.horizontalLinearLayout
-import wu.seal.jsontokotlin.ui.textInput
+import wu.seal.jsontokotlin.ui.*
 import javax.swing.JPanel
 
 object PropertyPrefixSupport : Extension() {
@@ -14,19 +11,24 @@ object PropertyPrefixSupport : Extension() {
     private const val prefixKey = "wu.seal.property_prefix"
 
     override fun createUI(): JPanel {
-        return horizontalLinearLayout {
-            val prefixJField = textInput(getConfig(prefixKey), getConfig(prefixKeyEnable).toBoolean()) {
+
+        val prefixJField = jTextInput(getConfig(prefixKey), getConfig(prefixKeyEnable).toBoolean()) {
+            addFocusLostListener {
                 if (getConfig(prefixKeyEnable).toBoolean()) {
-                    setConfig(prefixKey, it.text)
+                    setConfig(prefixKey, text)
                 }
-            }.also{
-                it.document = NamingConventionDocument(80)
             }
-            checkBox("Prefix append before every property: ", getConfig(prefixKeyEnable).toBoolean()) { isSelectedAfterClick ->
-                setConfig(prefixKeyEnable, isSelectedAfterClick.toString())
-                prefixJField.isEnabled = isSelectedAfterClick
-            }()
-            prefixJField()
+            document = NamingConventionDocument(80)
+        }
+
+        return jHorizontalLinearLayout {
+            jCheckBox("Prefix append before every property: ", getConfig(prefixKeyEnable).toBoolean()) {
+                addActionListener {
+                    setConfig(prefixKeyEnable, isSelected.toString())
+                    prefixJField.isEnabled = isSelected
+                }
+            }
+            add(prefixJField)
         }
     }
 

@@ -11,50 +11,61 @@ import javax.swing.JPanel
  */
 class AdvancedOtherTab(isDoubleBuffered: Boolean) : JPanel(BorderLayout(), isDoubleBuffered) {
     init {
-        val content = verticalLinearLayout {
-            checkBox("Enable Comment", ConfigManager.isCommentOff.not()) {
-                ConfigManager.isCommentOff = it.not()
-            }.putAlignLeft()
 
-            checkBox("Enable Order By Alphabetical", ConfigManager.isOrderByAlphabetical) {
-                ConfigManager.isOrderByAlphabetical = it
-            }.putAlignLeft()
+        jVerticalLinearLayout(true) {
 
-            checkBox("Enable Inner Class Model", ConfigManager.isInnerClassModel) {
-                ConfigManager.isInnerClassModel = it
-            }.putAlignLeft()
-
-            checkBox("Enable Map Type when JSON Field Key Is Primitive Type", ConfigManager.enableMapType) {
-                ConfigManager.enableMapType = it
-            }.putAlignLeft()
-
-            checkBox("Only create annotations when needed", ConfigManager.enableMinimalAnnotation) {
-                ConfigManager.enableMinimalAnnotation = it
-            }.putAlignLeft()
-
-            horizontalLinearLayout {
-                label("Indent (number of space): ")()
-                textInput(ConfigManager.indent.toString()) {
-                    val number = try {
-                        it.text.toInt()
-                    } catch (e: Exception) {
-                        it.text = ConfigManager.indent.toString()
-                        ConfigManager.indent
+            jCheckBox("Enable Comment", ConfigManager.isCommentOff.not()) {
+                addActionListener{
+                    ConfigManager.isCommentOff = isSelected.not()
+                }
+            }
+            jCheckBox("Enable Order By Alphabetical",  ConfigManager.isOrderByAlphabetical) {
+                addActionListener {
+                    ConfigManager.isOrderByAlphabetical = isSelected
+                }
+            }
+            jCheckBox("Enable Inner Class Model", ConfigManager.isInnerClassModel) {
+                addActionListener {
+                    ConfigManager.isOrderByAlphabetical = isSelected
+                }
+            }
+            jCheckBox("Enable Map Type when JSON Field Key Is Primitive Type", ConfigManager.enableMapType) {
+                addActionListener {
+                    ConfigManager.enableMapType = isSelected
+                }
+            }
+            jCheckBox("Only create annotations when needed", ConfigManager.enableMinimalAnnotation) {
+                addActionListener {
+                    ConfigManager.enableMinimalAnnotation = isSelected
+                }
+            }
+            jHorizontalLinearLayout {
+                jLabel("Indent (number of space): ")
+                jTextInput(ConfigManager.indent.toString()) {
+                    columns = 2
+                    addFocusLostListener {
+                        ConfigManager.indent = try {
+                            text.toInt()
+                        } catch (e: Exception) {
+                            text = ConfigManager.indent.toString()
+                            ConfigManager.indent
+                        }
                     }
-                    ConfigManager.indent = number
-                }.apply { columns = 2 }()
-            }.putAlignLeft()
+                }
+            }
 
-            horizontalLinearLayout {
-                label("Parent Class Template: ")()
-                textInput(ConfigManager.parenClassTemplate) {
-                    ConfigManager.parenClassTemplate = it.text
-                }.apply {
+            setAlignLeft(false)
+
+            jHorizontalLinearLayout {
+                jLabel("Parent Class Template: ")
+                jTextInput(ConfigManager.parenClassTemplate) {
+                    addFocusLostListener {
+                        ConfigManager.parenClassTemplate = text
+                    }
                     maximumSize = JBDimension(400, 30)
-                }()
+                }
+            }
 
-            }()
         }
-        add(content, BorderLayout.CENTER)
     }
 }

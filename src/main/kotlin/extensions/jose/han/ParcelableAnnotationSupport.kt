@@ -3,9 +3,9 @@ package extensions.jose.han
 import extensions.Extension
 import wu.seal.jsontokotlin.classscodestruct.Annotation
 import wu.seal.jsontokotlin.classscodestruct.KotlinDataClass
-import wu.seal.jsontokotlin.ui.checkBox
-import wu.seal.jsontokotlin.ui.horizontalLinearLayout
-import wu.seal.jsontokotlin.ui.link
+import wu.seal.jsontokotlin.ui.jCheckBox
+import wu.seal.jsontokotlin.ui.jHorizontalLinearLayout
+import wu.seal.jsontokotlin.ui.jLink
 import javax.swing.JPanel
 
 /**
@@ -17,11 +17,13 @@ object ParcelableAnnotationSupport : Extension() {
     const val configKey = "jose.han.add_parcelable_annotatioin_enable"
 
     override fun createUI(): JPanel {
-        return horizontalLinearLayout {
-            checkBox("Enable Parcelable Support ", getConfig(configKey).toBoolean()) { isSelectedAfterClick ->
-                setConfig(configKey, isSelectedAfterClick.toString())
-            }()
-            link("May Need Some Config", "https://github.com/wuseal/JsonToKotlinClass/blob/master/parceable_support_tip.md")()
+        return jHorizontalLinearLayout {
+            jCheckBox("Enable Parcelable Support ", getConfig(configKey).toBoolean()) {
+                addActionListener {
+                    setConfig(configKey, isSelected.toString())
+                }
+            }
+            jLink("May Need Some Config", "https://github.com/wuseal/JsonToKotlinClass/blob/master/parceable_support_tip.md")
             fillSpace()
         }
     }
